@@ -1,6 +1,20 @@
 # stockAnalyzer
 
-Specify custom rules to automatically analyze stocks
+Specify custom rules to automatically analyze stocks.
+
+Project is composed of three parts:
+
+### Downloader
+
+Here is were we download historical data and store it locally. We refer to this data as ground truth.
+
+### Updater
+
+Here we ensure our ground truth is properly updated in a daily basis.
+
+### Analyzer
+
+Here is where the magic happens; data is analyzed through custom rules and results are sent via email.
 
 ## Helpful Links
 

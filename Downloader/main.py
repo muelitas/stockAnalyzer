@@ -5,33 +5,23 @@ from configparser import ConfigParser
 # from datetime import datetime
 # from dateutil.relativedelta import relativedelta
 # import os
-# import sys
 
 # #Third party packages (in alphabetical order)
 # import pandas as pd
 # from yahoo_fin.stock_info import get_data
 
+# Custom modules / packages
+from validator import Validator
+
+configExtension = ".ini"
+
 parser = argparse.ArgumentParser(description="Serves as a stocks' historical data downloader")
-parser.add_argument("--config", dest = "config_path", default = "", help="Path to config (.ini) file")
+parser.add_argument("--config", dest = "config_path", default = "", help=f"Path to config ({configExtension}) file")
 args = parser.parse_args()
 
-# configExtension = ".ini"
-
-# if args.config_path == "":
-#   print(f"Please provide the path to your configuration '{configExtension}' file")
-#   sys.exit()
-
-# if not os.path.exists(args.config_path):
-#   print(f"Provided config file does not exist")
-#   sys.exit()
-
-# if not os.path.isfile(args.config_path):
-#   print("The provided configuration path does not lead to a file")
-#   sys.exit()
-
-# if not args.config_path.endswith(configExtension):
-#   print(f"Provided config file must have '{configExtension}' extension")
-#   sys.exit()
+#Validate given configuration file
+validator = Validator()
+validator.validateConfigPath(args.config_path, [configExtension])
 
 # Get configuration attributes
 config = ConfigParser()
@@ -40,7 +30,10 @@ numOfYearsRaw = config.get('main', 'years')
 symbolsRaw = config.get('main', 'symbols')
 downloadDir = config.get('main', 'download_dir')
 
-print(numOfYearsRaw, symbolsRaw, downloadDir)
+validator.validateDownloadDir(downloadDir)
+
+# print(numOfYearsRaw, symbolsRaw, downloadDir)
+# print(sys.path)
 
 # # Parse number of years from string to integer
 # numOfYears = int(numOfYearsRaw)

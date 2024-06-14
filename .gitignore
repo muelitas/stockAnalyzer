@@ -1,0 +1,4 @@
+dummy.ini
+downloads
+# Ignore compiled bytecode files
+*.pyc

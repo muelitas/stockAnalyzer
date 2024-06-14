@@ -1,19 +1,23 @@
 # #Python packages (in alphabetical order)
 import argparse
-# from collections import deque
+from collections import deque
 from configparser import ConfigParser
-# from datetime import datetime
-# from dateutil.relativedelta import relativedelta
-# import os
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import os
 
 # #Third party packages (in alphabetical order)
-# import pandas as pd
-# from yahoo_fin.stock_info import get_data
+import pickle
+from yahoo_fin.stock_info import get_data
 
 # Custom modules / packages
 from validator import Validator
+from color_print import ColorPrint
 
 configExtension = ".ini"
+downloadFileName = "stocksHistoricalData.pickle"
+
+printer = ColorPrint()
 
 parser = argparse.ArgumentParser(description="Serves as a stocks' historical data downloader")
 parser.add_argument("--config", dest = "config_path", default = "", help=f"Path to config ({configExtension}) file")
@@ -30,40 +34,32 @@ numOfYearsRaw = config.get('main', 'years')
 symbolsRaw = config.get('main', 'symbols')
 downloadDir = config.get('main', 'download_dir')
 
+# Validate and format config-provided values
 validator.validateDownloadDir(downloadDir)
+numOfYears = int(numOfYearsRaw)
+symbols = symbolsRaw.replace(" ", "").replace("\"", "").lower().split(",")
 
-# print(numOfYearsRaw, symbolsRaw, downloadDir)
-# print(sys.path)
+# Get start and end dates (today and x year(s) ago)
+dtEndDate = datetime.now()
+dtStartDate = dtEndDate - relativedelta(years=numOfYears)
+endDate = dtEndDate.strftime('%m/%d/%Y')
+startDate = dtStartDate.strftime('%m/%d/%Y')
 
-# # Parse number of years from string to integer
-# numOfYears = int(numOfYearsRaw)
-# # Remove white spaces and double quotes; set all to lower case; transform string to list
-# symbols = symbolsRaw.replace(" ", "").replace("\"", "").lower().split(",")
+# Iterate through each symbol
+symbolsHash = {}
+for symbol in symbols:
+  # Get stock's historical data
+  stockData = get_data(symbol, start_date=startDate, end_date=endDate, index_as_date = True, interval="1d")
 
-# # Get start and end dates (today and x year(s) ago)
-# dtEndDate = datetime.now()
-# dtStartDate = dtEndDate - relativedelta(years=numOfYears)
-# endDate = dtEndDate.strftime('%m/%d/%Y')
-# startDate = dtStartDate.strftime('%m/%d/%Y')
+  q = deque()
+  for idx in stockData.index:
+    q.append((stockData['high'][idx] + stockData['low'][idx]) / 2)
 
-# symbolsHash = {}
+  symbolsHash[symbol] = q
 
-# # Iterate through each symbol
-# for symbol in symbols:
-#   # Get stock's historical data
-#   stockData = get_data(symbol, start_date="6/1/2024", end_date=endDate, index_as_date = True, interval="1d")
-#   print(stockData)
-
-#   q = deque()
-#   for idx in stockData.index:
-#     q.append((stockData['high'][idx] + stockData['low'][idx]) / 2)
-
-#   print(q)
-#   symbolsHash[symbol] = q
-  
-# print(symbolsHash)
-# # df = pd.DataFrame()
-# # df[symbol.lower()] = stockData['average']
-# # print(df.head(5))
-# #   print(symbol)
-# print("\033[93m Try programiz.pro \033[0m")
+#Save historical data in pickle file
+downloadFilePath = os.path.join(downloadDir, downloadFileName)
+fileInstance = open(downloadFilePath, 'wb')
+pickle.dump(symbolsHash, fileInstance)
+fileInstance.close()
+printer.successPrint(f"Historical data successfully downloaded and saved in {downloadFilePath}")

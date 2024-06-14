@@ -4,7 +4,7 @@ pathToAppend = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 sys.path.append(pathToAppend)
 
 # Custom packages, modules, files, etc. (in alphabetical order)
-from path_validator import PathValidator
+from _path_validator import PathValidator
 
 class Validator(PathValidator):
   def __init__(self) -> None:

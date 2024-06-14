@@ -3,7 +3,7 @@ import os
 import sys
 
 # Custom packages, modules, files, etc. (in alphabetical order)
-from color_print import ColorPrint
+from _color_print import ColorPrint
 
 class PathValidator():
   """Serve as a validator for a given file path"""
@@ -50,12 +50,13 @@ class PathValidator():
 
   def dirIsEmptyWithWarn(self, pathToCheck: str, pathLabel: str):
     """Ensure given path to directory is empty"""
-    userDecision = None
+    userStopped = False
     if not len(os.listdir(pathToCheck)) == 0:
       self.colorPrint.warnPrint(f"The given '{pathLabel}' is not empty; files might get overwritten.\n")
-      userDecision = input("Would you like to continue? [Y/n]")
-
-    if userDecision.lower() == 'n':
+      userInput = input("Would you like to continue? [Y/n]")
+      userStopped = userInput.lower() == 'n'
+    
+    if userStopped:
       print("Ceasing to live...")
       sys.exit()
 

@@ -1,4 +1,4 @@
-# #Python packages (in alphabetical order)
+#Python packages (in alphabetical order)
 import argparse
 from collections import deque
 from configparser import ConfigParser
@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import os
 
-# #Third party packages (in alphabetical order)
+#Third party packages (in alphabetical order)
 import pickle
 from yahoo_fin.stock_info import get_data
 
@@ -14,13 +14,15 @@ from yahoo_fin.stock_info import get_data
 from validator import Validator
 from color_print import ColorPrint
 
+# TODO maybe add check: if not 4pm ET yet, recommend user to wait until after to run this program
+
 configExtension = ".ini"
 downloadFileName = "stocksHistoricalData.pickle"
 
 printer = ColorPrint()
 
 parser = argparse.ArgumentParser(description="Serves as a stocks' historical data downloader")
-parser.add_argument("--config", dest = "config_path", default = "", help=f"Path to config ({configExtension}) file")
+parser.add_argument("--config", dest = "config_path", default = None, help=f"Path to config ({configExtension}) file")
 args = parser.parse_args()
 
 #Validate given configuration file
@@ -49,6 +51,7 @@ startDate = dtStartDate.strftime('%m/%d/%Y')
 symbolsHash = {}
 for symbol in symbols:
   # Get stock's historical data
+  # NOTE: get_data is not end_date inclusive
   stockData = get_data(symbol, start_date=startDate, end_date=endDate, index_as_date = True, interval="1d")
 
   q = deque()
@@ -62,4 +65,5 @@ downloadFilePath = os.path.join(downloadDir, downloadFileName)
 fileInstance = open(downloadFilePath, 'wb')
 pickle.dump(symbolsHash, fileInstance)
 fileInstance.close()
-printer.successPrint(f"Historical data successfully downloaded and saved in {downloadFilePath}")
+printer.simplePrint(f"Historical data successfully downloaded and saved in {downloadFilePath}", 'green')
+

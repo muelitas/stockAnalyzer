@@ -14,25 +14,25 @@ class PathValidator():
   def pathIsSet(self, pathToCheck: str | None, pathLabel: str) -> None:
     """Ensure given path is set (not a falsy value)"""
     if not pathToCheck:
-      self.colorPrint.errPrint(f"Please provide path of '{pathLabel}'")
+      self.colorPrint.simplePrint(f"Please provide path of '{pathLabel}'", 'red')
       sys.exit()
     
   def pathExists(self, pathToCheck: str, pathLabel: str) -> None:
     """Ensure given path exists"""
     if not os.path.exists(pathToCheck):
-      self.colorPrint.errPrint(f"Provided '{pathLabel}' does not exist")
+      self.colorPrint.simplePrint(f"Provided '{pathLabel}' does not exist", 'red')
       sys.exit()
 
   def pathIsFile(self, pathToCheck: str, pathLabel: str) -> None:
     """Ensure given path is a file"""
     if not os.path.isfile(pathToCheck):
-      self.colorPrint.errPrint(f"Path to the '{pathLabel}' does not lead to a file")
+      self.colorPrint.simplePrint(f"Path to the '{pathLabel}' does not lead to a file", 'red')
       sys.exit()
 
   def pathIsDir(self, pathToCheck: str, pathLabel: str) -> None:
     """Ensure given path is a directory"""
     if not os.path.isdir(pathToCheck):
-      self.colorPrint.errPrint(f"Path to the '{pathLabel}' does not lead to a directory")
+      self.colorPrint.simplePrint(f"Path to the '{pathLabel}' does not lead to a directory", 'red')
       sys.exit()
 
   def pathHasValidExtension(self, pathToCheck: str, pathLabel: str, validExtensions: list) -> None:
@@ -44,15 +44,15 @@ class PathValidator():
     for extension in extensionsInLower:
       if pathInLower.endswith(extension):
         return
-      
-    self.colorPrint.errPrint(f"Provided '{pathLabel}' must have one one of the following extensions: {validExtensions}")
+    
+    self.colorPrint.simplePrint(f"Provided '{pathLabel}' must have one one of the following extensions: {validExtensions}", 'red')
     sys.exit()
 
   def dirIsEmptyWithWarn(self, pathToCheck: str, pathLabel: str):
     """Ensure given path to directory is empty"""
     userStopped = False
     if not len(os.listdir(pathToCheck)) == 0:
-      self.colorPrint.warnPrint(f"The given '{pathLabel}' is not empty; files might get overwritten.\n")
+      self.colorPrint.simplePrint(f"The given '{pathLabel}' is not empty; files might get overwritten.\n", 'yellow')
       userInput = input("Would you like to continue? [Y/n]")
       userStopped = userInput.lower() == 'n'
     

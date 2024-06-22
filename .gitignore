@@ -1,4 +1,9 @@
-dummy.ini
-downloads
+practice_runs.py
+downloads/*
 # Ignore compiled bytecode files
 *.pyc
+
+config_files/downloader_mine.ini
+config_files/updater_mine.ini
+
+logs/logs.txt

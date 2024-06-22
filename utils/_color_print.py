@@ -2,23 +2,27 @@ class ColorPrint:
   """To handle and display messages in terminal in different colors/states"""
   def __init__(self) -> None:
     self.endc = '\033[0m'
-    self.red = '\033[91m'
-    self.green = '\033[92m'
-    self.yellow = '\033[93m'
-    self.cyan = '\033[96m'
+    self.hashmap = {
+      'red': {
+        'color': '\033[91m',
+        'label': '[ERROR]'
+      },
+      'green': {
+        'color': '\033[92m',
+        'label': '[SUCCESS]'
+      },
+      'yellow': {
+        'color': '\033[93m',
+        'label': '[WARNING]'
+      },
+      'cyan': {
+        'color': '\033[96m',
+        'label': '[INFO]'
+      },
+    }
 
-  def successPrint(self, msgToPrint: str) -> None:
-    """Print message in green (success)"""
-    print(f"{self.green}[SUCCESS]: {msgToPrint}{self.endc}")
-
-  def errPrint(self, msgToPrint: str) -> None:
-    """Print message in red (error)"""
-    print(f"{self.red}[ERROR]: {msgToPrint}{self.endc}")
-
-  def warnPrint(self, msgToPrint: str) -> None:
-    """Print message in yellow (warning)"""
-    print(f"{self.yellow}[WARNING]: {msgToPrint}{self.endc}")
-
-  def infoPrint(self, msgToPrint: str) -> None:
-    """Print informational (cyan) message"""
-    print(f"{self.cyan}[INFO]: {msgToPrint}{self.endc}")
+  def simplePrint(self, msgToPrint: str, colorOfPrint: None | str) -> None:
+    """Print message in the given color"""
+    # TODO make sure we colorOfPrint; if we don't default to none and let user know; if None, print with default
+    color, label = self.hashmap[colorOfPrint]['color'], self.hashmap[colorOfPrint]['label']
+    print(f"{color}{label}: {msgToPrint}{self.endc}")

@@ -26,3 +26,6 @@ https://selenium-python.readthedocs.io/
 
 Explanation on how to use chromedriver along with Chrome for Testing
 https://www.youtube.com/watch?v=zWxDWrl701o
+
+Explanation on how to do web scraping using Python, Lambda, S3 and Eventbridge
+https://medium.com/@vinodvidhole/automate-web-scraping-using-python-aws-lambda-amazon-s3-amazon-eventbridge-cloudwatch-c4c982c35fa7

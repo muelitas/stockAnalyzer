@@ -3,13 +3,13 @@ import os
 import sys
 
 # Custom packages, modules, files, etc. (in alphabetical order)
-from _color_print import ColorPrint
+from utils._printer import Printer
 
 class PathValidator():
   """Serve as a validator for a given file path"""
 
   def __init__(self) -> None:
-    self.colorPrint = ColorPrint()
+    self.colorPrint = Printer()
 
   def pathIsSet(self, pathToCheck: str | None, pathLabel: str) -> None:
     """Ensure given path is set (not a falsy value)"""

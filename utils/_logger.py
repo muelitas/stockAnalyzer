@@ -1,42 +1,40 @@
 from datetime import datetime
-import os
 
-from _color_print import ColorPrint
-from _path_validator import PathValidator
-pathToAppend = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'utils')
+from utils._path_validator import PathValidator
+from utils._printer import Printer
 
-class Logger:
+class Logger():
   """Logs logs logs"""
-  def __init__(self) -> None:
-    self.logFilePath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'logs', 'logs.txt')
+  def __init__(self, logFilePath: str, validFileExtensions: list) -> None:
+    self.logFilePath = logFilePath
     self.path_validator = PathValidator()
-    self.printer = ColorPrint()
-    self.validateLogFilePath()
+    self.printer = Printer()
+    self.__validateLogFilePath(validFileExtensions)
 
-  def validateLogFilePath(self) -> None:
+  def __validateLogFilePath(self, validFileExtensions: list) -> None:
     """Validate path where logs will be saved"""
     fileLabel = "logs file"
     self.path_validator.pathIsSet(self.logFilePath, fileLabel)
     self.path_validator.pathExists(self.logFilePath, fileLabel)
     self.path_validator.pathIsFile(self.logFilePath, fileLabel)
-    self.path_validator.pathHasValidExtension(self.logFilePath, fileLabel, ['txt'])
+    self.path_validator.pathHasValidExtension(self.logFilePath, fileLabel, validFileExtensions)
 
   def logMsg(self, textToLog: str, excludeLog: None | bool, colorOfPrint: None | str ) -> None:
     """Handle log and/or print"""
     if excludeLog == True or excludeLog == None:
-      self.printMsg(textToLog, colorOfPrint)
+      self.__printMsg(textToLog, colorOfPrint)
 
     if excludeLog == False or excludeLog == None:
-      self.saveLog(textToLog)
+      self.__saveLog(textToLog)
 
-  def saveLog(self, textToLog: str) -> None:
+  def __saveLog(self, textToLog: str) -> None:
     """Save given text/prompt to log file"""
     with open(self.logFilePath, "a") as logFile:
         dtNow = datetime.now()
         now = dtNow.strftime('%B %d, %Y; %I:%M:%S %p')
         logFile.write(f"[{now}] {textToLog}\n")
 
-  def printMsg(self, msgToPrint: str, colorOfPrint: None | str) -> None:
+  def __printMsg(self, msgToPrint: str, colorOfPrint: None | str) -> None:
     """Use printer class to display message in terminal"""
     self.printer.simplePrint(msgToPrint, colorOfPrint)
 

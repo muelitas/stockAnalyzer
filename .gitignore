@@ -1,0 +1,14 @@
+practice_runs.py
+# Ignore compiled bytecode files
+*.pyc
+
+config_files/downloader_mine.ini
+config_files/updater_mine.ini
+
+logs/general_logs_mine.txt
+logs/daily_stocks_log_mine.txt
+
+_my_config.py
+
+downloads/stocks/*
+!downloads/stocks/README.md

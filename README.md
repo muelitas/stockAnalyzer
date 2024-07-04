@@ -27,8 +27,13 @@ https://selenium-python.readthedocs.io/
 Explanation on how to use chromedriver along with Chrome for Testing
 https://www.youtube.com/watch?v=zWxDWrl701o
 
-Explanation on how to do web scraping using Python, Lambda, S3 and Eventbridge  
-https://medium.com/@vinodvidhole/automate-web-scraping-using-python-aws-lambda-amazon-s3-amazon-eventbridge-cloudwatch-c4c982c35fa7
+Automate Web Scraping Using Python, AWS Lambda, Amazon S3 and Amazon EventBridge CloudWatch  
+[Medium Article](https://medium.com/@vinodvidhole/automate-web-scraping-using-python-aws-lambda-amazon-s3-amazon-eventbridge-cloudwatch-c4c982c35fa7)  
+_Note: Includes some embeded python scripts_
+
+How I built a Scalable Web-Scraper with AWS  
+[Medium Article](https://towardsdatascience.com/get-your-own-data-building-a-scalable-web-scraper-with-aws-654feb9fdad7)&emsp;[GitHub Repo](https://github.com/aaronglang/cl_scraper)  
+_Note: Uses BeautifulSoup instead of Selenium_
 
 ### Machine Learning Specific
 

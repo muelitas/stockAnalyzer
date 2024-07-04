@@ -2,19 +2,19 @@
 
 Specify custom rules to automatically analyze stocks.
 
-Project is composed of three parts:
+### Ground Truth Gathering
 
-### Downloader
+The plan is to create a file that runs every day (initially as a batch file in personal computer; later as a lambda function in AWS) were we download historical data for a given list of stocks and store it locally. If data has already been downloaded for the first time, update it by removing the oldest entry and appending the most recent one (this so that data remains in an x-number-of-years range).
 
-Here is were we download historical data and store it locally. We refer to this data as ground truth.
+### Ground Truth Processsing
 
-### Updater
+TODO
 
-Here we ensure our ground truth is properly updated in a daily basis.
+### Ground Truth Analysis
 
-### Analyzer
+Here is where the magic will happen; data will be analyzed with machine learning algorithm(s), deep learning algorithm(s) and/or common technical indicators such as moving average, bollinger bands, etc.
 
-Here is where the magic happens; data is analyzed through custom rules and results are sent via email.
+As a nice to have, email updates might be implemented.
 
 ## Helpful Links
 
@@ -27,5 +27,16 @@ https://selenium-python.readthedocs.io/
 Explanation on how to use chromedriver along with Chrome for Testing
 https://www.youtube.com/watch?v=zWxDWrl701o
 
-Explanation on how to do web scraping using Python, Lambda, S3 and Eventbridge
+Explanation on how to do web scraping using Python, Lambda, S3 and Eventbridge  
 https://medium.com/@vinodvidhole/automate-web-scraping-using-python-aws-lambda-amazon-s3-amazon-eventbridge-cloudwatch-c4c982c35fa7
+
+### Machine Learning Specific
+
+Forecasting Stock Market Prices Using Machine Learning and Deep Learning Models: A Systematic Review, Performance Analysis and Discussion of Implications  
+[MDPI Journal](https://www.mdpi.com/2227-7072/11/3/94)
+
+Machine learning techniques and data for stock market forecasting: A literature review  
+[Elsevier Article](https://www.sciencedirect.com/science/article/pii/S0957417422001452)
+
+How I’m using Machine Learning to Trade in the Stock Market  
+[Medium Article](https://medium.com/analytics-vidhya/how-im-using-machine-learning-to-trade-in-the-stock-market-3ba981a2ffc2)&emsp;[GitHub Repo](https://github.com/kaneelgit/Trading-strategy-/tree/main)

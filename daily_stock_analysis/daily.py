@@ -8,10 +8,12 @@ import pytz
 import os
 import smtplib
 import sys
+import time
 
 # Third party packages (in alphabetical order)
 from yahooquery import Ticker
 
+# TODO For those symbols that don't have after hours, make sure to run another lambda at 6:31am
 # TODO make an Emailer class so you can send email on lambda_handler exception with the error
 # TODO add a symbol duplicate check
 # TODO Add descriptions to all functions
@@ -30,14 +32,14 @@ class Stock:
         # Number of tickers to fetch at a time from yahooquery
         self.yq_tickers_num_to_fetch = 10
 
-    def send_email(self) -> None:
+    def send_email(self, recipient: str = None) -> None:
         """Send an email with an attachment"""
         # Initialize Email and Server Variables
         gmail_user = os.environ['GMAIL_APP_USER']
         gmail_app_password = os.environ['GMAIL_APP_PSW']
         email_body = 'Find attached a file with today\'s stocks\' analysis.'
         email_from = gmail_user
-        email_to = os.environ['EMAIL_TO']
+        email_to = recipient if recipient != None else os.environ['EMAIL_TO']
 
         message = MIMEMultipart()
         message['Subject'] = 'Stocks Analysis'
@@ -75,11 +77,22 @@ class Stock:
         quantity : int
             number of stocks to grab from the list (defaults to 1000)
         """
-        symbols_list = None
+        symbols = None
         with open(self.path_to_stocks_file, 'r') as file:
-            symbols_list = file.read()
+            symbols = file.read()
 
-        return symbols_list.split('\n')[:quantity]
+        symbols = symbols.split('\n')[:quantity]
+
+        #To ensure symbols are unique
+        symbols_list_as_set = set(symbols)
+
+        #If they are not, mark it as an error
+        if len(symbols_list_as_set) != len(symbols):
+            repeated = list(set([x for x in symbols if symbols.count(x) > 1]))
+            msg = f"These symbols are repeated: {', '.join(repeated)}."
+            self.errs.append(msg)
+
+        return list(symbols_list_as_set)
 
     def determine_yahooquery_key(self) -> None:
         """Determine which percentage key to use for yahooquery API given the time of the day"""
@@ -178,6 +191,9 @@ class Stock:
 
     def log_errors(self) -> None:
         """Document all errors found during runtime"""
+        if len(self.errs) == 0:
+            return
+
         orig_stdout = sys.stdout
         logs_file_instance = open(self.path_to_log, "a")
         sys.stdout = logs_file_instance
@@ -189,8 +205,20 @@ class Stock:
         logs_file_instance.close()
         sys.stdout = orig_stdout
 
+    def log_single_line(self, txt_to_log):
+        """Document a single line in the log file"""
+        orig_stdout = sys.stdout
+        logs_file_instance = open(self.path_to_log, "a")
+        sys.stdout = logs_file_instance
+
+        print(txt_to_log)
+
+        logs_file_instance.close()
+        sys.stdout = orig_stdout
+
     def run_program(self) -> None:
         """Merely a handler to place the flow of commands"""
+        start_time = time.time()
         self.init_log_file()
         symbols_list = self.init_symbols_list()
         [first_processed, failed] = self.process_symbols(symbols_list)
@@ -198,7 +226,9 @@ class Stock:
         processed = {**first_processed}
         self.log_processed_symbols(processed)
         self.log_errors()
-        self.send_email()
+
+        self.log_single_line(f"Program took {time.time() - start_time} seconds.")
+        self.send_email('mj_muelitas@hotmail.com')
 
 def lambda_handler(event, context):
     try: 
